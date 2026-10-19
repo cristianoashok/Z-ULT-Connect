@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Z ULT Connect installer (WiX Toolset v5).
+  Installs for the current user only (no admin prompt) into
+  %LOCALAPPDATA%\Programs\Z ULT Connect, with Start menu and desktop shortcuts.
+  Built by build-msi.bat - you don't need to run anything here directly.
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package Name="Z ULT Connect"
+           Manufacturer="Victor"
+           Version="$(var.ProductVersion)"
+           UpgradeCode="8E3B5C2A-4F71-4D2B-9A6E-1C7D0F5B3E92"
+           Scope="perUser"
+           Compressed="yes">
+
+    <!-- Installing a newer version replaces the old one automatically -->
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Z ULT Connect is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- Icon in Settings > Apps -->
+    <Icon Id="AppIcon" SourceFile="..\app.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+    <Property Id="ARPCOMMENTS" Value="Control Sony ULT Wear headphones from the Windows tray." />
+
+    <!-- A simple welcome screen with the licence, then Install -->
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <ui:WixUI Id="WixUI_Minimal" />
+
+    <!-- %LOCALAPPDATA%\Programs\Z ULT Connect (per-user, like VS Code or Chrome's user install) -->
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="UserProgramsFolder" Name="Programs">
+        <Directory Id="INSTALLFOLDER" Name="Z ULT Connect" />
+      </Directory>
+    </StandardDirectory>
+
+    <Feature Id="Main" Title="Z ULT Connect">
+
+      <Component Id="MainExe" Directory="INSTALLFOLDER" Guid="3414A0AC-DA76-41BD-959B-3C02BAEB8A98">
+        <File Id="ZUltConnectExe" Source="$(var.PublishDir)ZUltConnect.exe" />
+        <RegistryValue Root="HKCU" Key="Software\Z ULT Connect" Name="InstallFolder" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes" />
+        <RemoveFolder Id="RemoveInstallFolder" On="uninstall" />
+        <RemoveFolder Id="RemoveUserProgramsFolder" Directory="UserProgramsFolder" On="uninstall" />
+      </Component>
+
+      <Component Id="StartMenuShortcut" Directory="ProgramMenuFolder" Guid="B781CFD7-EB6D-4C4C-8808-A3784DFA5767">
+        <Shortcut Id="StartMenuShortcut" Name="Z ULT Connect" Description="Control your Sony ULT Wear"
+                  Target="[INSTALLFOLDER]ZUltConnect.exe" WorkingDirectory="INSTALLFOLDER" Icon="AppIcon" />
+        <RegistryValue Root="HKCU" Key="Software\Z ULT Connect" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+
+      <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="4020F62A-BABF-4CCC-B610-010BE7C6DC9F">
+        <Shortcut Id="DesktopShortcut" Name="Z ULT Connect" Description="Control your Sony ULT Wear"
+                  Target="[INSTALLFOLDER]ZUltConnect.exe" WorkingDirectory="INSTALLFOLDER" Icon="AppIcon" />
+        <RegistryValue Root="HKCU" Key="Software\Z ULT Connect" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+
+    </Feature>
+  </Package>
+</Wix>

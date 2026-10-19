@@ -1,0 +1,13 @@
+# build output
+bin/
+obj/
+publish/
+installer-out/
+*.msi
+*.msix
+
+# editors
+.vs/
+.vscode/
+*.user
+*.suo

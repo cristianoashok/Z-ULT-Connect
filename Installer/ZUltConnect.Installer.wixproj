@@ -1,0 +1,13 @@
+<!-- Builds Z-ULT-Connect-Setup.msi from the published app (see build-msi.bat). -->
+<Project Sdk="WixToolset.Sdk/5.0.2">
+  <PropertyGroup>
+    <OutputName>Z-ULT-Connect-Setup</OutputName>
+    <ProductVersion>1.0.0</ProductVersion>
+    <DefineConstants>PublishDir=..\publish\;ProductVersion=$(ProductVersion)</DefineConstants>
+    <!-- per-user install: the "user profile" validation warnings don't apply -->
+    <SuppressIces>ICE91</SuppressIces>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+  </ItemGroup>
+</Project>
